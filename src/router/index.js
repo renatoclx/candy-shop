@@ -23,22 +23,28 @@ const router = createRouter({
       meta: { layout: 'list-client' }
     },
     {
+      path: '/clientes/novo',
+      name: 'NovoCliente',
+      component: () => import('../components/clientes/FormClientComponent.vue'),
+      meta: { layout: 'form-client-component' }
+    },
+    {
       path: '/produtos',
       name: 'Produtos',
       component: () => import('../components/produtos/ProdutosComponent.vue'),
       meta: { layout: 'list-product' }
     },
     {
+      path: '/produtos/novo',
+      name: 'NovoProduto',
+      component: () => import('../components/produtos/FormProdutoComponent.vue'),
+      meta: { layout: 'form-product-component' }
+    },
+    {
       path: '/vendas',
       name: 'Vendas',
       component: () => import('../components/vendas/VendasComponent.vue'),
       meta: { layout: 'list-sales' }
-    },
-    {
-      path: '/clientes/novo',
-      name: 'NovoCliente',
-      component: () => import('../components/clientes/FormClientComponent.vue'),
-      meta: { layout: 'form-client-component' }
     }
   ]
 })

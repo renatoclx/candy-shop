@@ -37,9 +37,11 @@ const data = [
           </button>
         </div>
         <div>
-          <button class="btn botao-confirmar mx-2">
-            Novo <img src="../../assets/icons/PlusIcon.svg" width="15" height="15" />
-          </button>
+          <router-link to="/produtos/novo">
+            <button class="btn botao-confirmar mx-2">
+              Novo <img src="../../assets/icons/PlusIcon.svg" width="15" height="15" />
+            </button>
+          </router-link>
         </div>
       </div>
       <div class="mt-1 table-responsive my-5" style="width: 100%">
