@@ -35,7 +35,20 @@ import { RouterLink } from 'vue-router'
               <router-link to="/clientes">
                 <span class="item-menu mb-1">
                   <img src="../../assets/icons/UserIcon.svg" width="20" height="20" class="mx-2" />
-                  Cadastrar Pessoas
+                  Cadastrar Clientes
+                </span>
+              </router-link>
+            </li>
+            <li>
+              <router-link to="/usuarios">
+                <span class="item-menu mb-1">
+                  <img
+                    src="../../assets/icons/UserSysIcon.svg"
+                    width="20"
+                    height="20"
+                    class="mx-2"
+                  />
+                  Cadastrar Usuários
                 </span>
               </router-link>
             </li>

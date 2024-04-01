@@ -7,7 +7,7 @@ import TableComponent from '../table/TableComponent.vue'
 import { ref } from 'vue'
 
 const fields = ['ID', 'Nome', 'Curso', 'Gênero', 'Idade']
-const titleField = ref('Produtos')
+const titleField = ref('Usuários')
 
 const data = [
   { ID: '01', Nome: 'Abiola Esther', Curso: 'Computer Science', Gênero: 'Female', Idade: '17' },
@@ -17,7 +17,6 @@ const data = [
   { ID: '05', Nome: 'Daisy Katherine', Curso: 'Business studies', Gênero: 'Female', Idade: '22' }
 ]
 </script>
-
 <template>
   <HeaderComponent />
   <div class="principal">
@@ -26,7 +25,7 @@ const data = [
       <div class="bloco-busca-novo">
         <div class="mx-2" style="display: flex; flex-direction: row">
           <input
-            id="findProduto"
+            id="findUsuario"
             style="width: 20rem"
             class="form-control"
             type="text"
@@ -37,7 +36,7 @@ const data = [
           </button>
         </div>
         <div>
-          <router-link to="/produtos/novo">
+          <router-link to="/usuarios/novo">
             <button class="btn botao-confirmar mx-2">
               Novo <img src="../../assets/icons/PlusIcon.svg" width="15" height="15" />
             </button>

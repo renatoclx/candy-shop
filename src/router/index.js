@@ -29,6 +29,18 @@ const router = createRouter({
       meta: { layout: 'form-client-component' }
     },
     {
+      path: '/usuarios',
+      name: 'Usuários',
+      component: () => import('../components/usuarios/UsuariosComponent.vue'),
+      meta: { layout: 'list-user' }
+    },
+    {
+      path: '/usuarios/novo',
+      name: 'NovoUsuario',
+      component: () => import('../components/usuarios/FormUsuarioComponent.vue'),
+      meta: { layout: 'form-user-component' }
+    },
+    {
       path: '/produtos',
       name: 'Produtos',
       component: () => import('../components/produtos/ProdutosComponent.vue'),
