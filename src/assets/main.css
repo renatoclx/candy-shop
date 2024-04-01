@@ -149,13 +149,28 @@ footer {
   color: #fff;
 }
 
+.botao-limpar:hover {
+  background-color: #ff543a;
+  color: #fff;
+}
+
 .botao-pesquisar {
   background-color: #5086c1;
   color: #fff;
 }
 
+.botao-pesquisar:hover {
+  background-color: #0c5db3;
+  color: #fff;
+}
+
 .botao-confirmar {
   background-color: #97c1a9;
+  color: #fff;
+}
+
+.botao-confirmar:hover {
+  background-color: #4ab97a;
   color: #fff;
 }
 
@@ -165,6 +180,14 @@ footer {
 
 .cor-texto {
   color: #fcfcda;
+}
+
+.is-invalid {
+  border-color: red;
+}
+.invalid-feedback {
+  color: red;
+  font-size: 0.875rem; /* Pode ajustar o tamanho da fonte conforme necessário */
 }
 
 footer > .item-menu {

@@ -1,10 +1,12 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 import './assets/main.css'
+import 'vue3-toastify/dist/index.css'
 
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+import Vue3Toastify from 'vue3-toastify'
 
 import HeaderComponent from './components/header/HeaderComponent.vue'
 import FooterComponent from './components/footer/FooterComponent.vue'
@@ -36,5 +38,6 @@ const app = createApp(App)
   .component('form-user-component', FormUsuarioComponent)
 
 app.use(router)
+app.use(Vue3Toastify)
 
 app.mount('#app')
