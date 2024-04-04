@@ -159,6 +159,16 @@ footer {
   color: #fff;
 }
 
+.botao-alterar {
+  background-color: #c8ca66;
+  color: #fff;
+}
+
+.botao-alterar:hover {
+  background-color: #8d8f12;
+  color: #fff;
+}
+
 .botao-pesquisar:hover {
   background-color: #0c5db3;
   color: #fff;
