@@ -57,6 +57,12 @@ const router = createRouter({
       name: 'Vendas',
       component: () => import('../components/vendas/VendasComponent.vue'),
       meta: { layout: 'list-sales' }
+    },
+    {
+      path: '/vendas/novo',
+      name: 'NovaVenda',
+      component: () => import('../components/vendas/FormVendaComponent.vue'),
+      meta: { layout: 'form-venda-component' }
     }
   ]
 })
