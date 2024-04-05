@@ -6,15 +6,14 @@ import TableComponent from '../table/TableComponent.vue'
 
 import { ref } from 'vue'
 
-const fields = ['ID', 'Nome', 'Curso', 'Gênero', 'Idade']
+const fields = ['nome', 'preco_custo', 'preco_venda']
+const columnNames = ['Nome', 'Preço de Custo', 'Preço de Venda']
 const titleField = ref('Produtos')
 
 const data = [
-  { ID: '01', Nome: 'Abiola Esther', Curso: 'Computer Science', Gênero: 'Female', Idade: '17' },
-  { ID: '02', Nome: 'Robert V. Kratz', Curso: 'Philosophy', Gênero: 'Male', Idade: '19' },
-  { ID: '03', Nome: 'Kristen Anderson', Curso: 'Economics', Gênero: 'Female', Idade: '20' },
-  { ID: '04', Nome: 'Adam Simon', Curso: 'Food science', Gênero: 'Male', Idade: '21' },
-  { ID: '05', Nome: 'Daisy Katherine', Curso: 'Business studies', Gênero: 'Female', Idade: '22' }
+  { nome: 'Donuts de Chocolate', preco_custo: '2,00', preco_venda: '4,00' },
+  { nome: 'Bolo de Cenoura', preco_custo: '1,50', preco_venda: '3,00' },
+  { nome: 'Donuts de Nutella', preco_custo: '6,00', preco_venda: '12,00' }
 ]
 </script>
 
@@ -45,7 +44,7 @@ const data = [
         </div>
       </div>
       <div class="mt-1 table-responsive my-5" style="width: 100%">
-        <TableComponent :fields="fields" :data="data"> </TableComponent>
+        <TableComponent :fields="fields" :data="data" :column-names="columnNames"> </TableComponent>
       </div>
     </div>
   </div>

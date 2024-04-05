@@ -6,12 +6,13 @@ import TableComponent from '../table/TableComponent.vue'
 
 import { ref } from 'vue'
 
-const fields = ['Nome', 'Login']
+const columnNames = ['ID', 'Nome', 'Login']
+const fields = ['id', 'nome', 'login']
 const titleField = ref('Usuários')
 
 const data = [
-  { Nome: 'Abiola Esther', Login: 'Computer Science' },
-  { Nome: 'Abiola Esther', Login: 'Computer Science' }
+  { id: 1, nome: 'Renato Jean', login: 'renatojean' },
+  { id: 2, nome: 'Michael Jordan', login: 'michaeljordan' }
 ]
 </script>
 <template>
@@ -41,7 +42,7 @@ const data = [
         </div>
       </div>
       <div class="mt-2 table-responsive my-5" style="width: 100%">
-        <TableComponent :fields="fields" :data="data"></TableComponent>
+        <TableComponent :fields="fields" :data="data" :column-names="columnNames"></TableComponent>
       </div>
     </div>
   </div>
