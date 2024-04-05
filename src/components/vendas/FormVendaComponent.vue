@@ -28,7 +28,7 @@ const titleField = ref('Nova Venda')
           </button>
         </div>
       </div>
-      <div class="bloco-form" style="justify-content: flex-start">
+      <div class="bloco-form" style="justify-content: center">
         <div>
           <label for="produto" class="form-label mb-0">Produto:</label>
           <input
@@ -74,6 +74,44 @@ const titleField = ref('Nova Venda')
           <button class="btn botao-confirmar mx-2">
             Adicionar
             <img src="../../assets/icons/PlusIcon.svg" width="15" height="15" />
+          </button>
+        </div>
+      </div>
+      <div>
+        <table id="tableProdutos" class="table table-striped">
+          <thead>
+            <tr style="vertical-align: middle">
+              <th>Produto</th>
+              <th>Quantidade</th>
+              <th>Preço de Custo</th>
+              <th>Preço Total</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td style="width: 250px">
+                <button class="btn botao-limpar">
+                  <img src="../../assets/icons/RemoveIcon.svg" alt="" width="15" height="15" />
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="bloco-form" style="justify-content: space-between; align-items: center">
+        <div style="display: flex; flex-direction: row">
+          <h6>Total do Pedido (R$):</h6>
+          <h6 class="mx-2" style="color: #fd9485">15,89</h6>
+        </div>
+        <div>
+          <button class="btn botao-confirmar">
+            <img src="../../assets/icons/SaleIcon.svg" alt="" width="15" height="15" />
+            &nbsp;&nbsp;Realizar Venda
           </button>
         </div>
       </div>
