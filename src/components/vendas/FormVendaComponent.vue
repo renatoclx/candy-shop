@@ -4,8 +4,48 @@ import FooterComponent from '../footer/FooterComponent.vue'
 import TitleComponent from '../title/TitleComponent.vue'
 
 import { ref } from 'vue'
+import { Money } from 'v-money3'
+import { toast } from 'vue3-toastify'
 
 const titleField = ref('Nova Venda')
+const quantidade = ref(0)
+const precoUnitario = ref(0)
+const precoTotal = ref(0)
+// const itensPedido = ref([])
+
+// const itemVenda = ref({
+//   produto: String,
+//   quantidadeProduto: Number,
+//   precoUnitarioProduto: Number,
+//   precoTotalProduto: Number
+// })
+
+const maskMoney = ref({
+  decimal: ',',
+  thousands: '.',
+  prefix: 'R$ ',
+  precision: 2,
+  masked: false
+})
+
+const calcQtde = () => {
+  if (quantidade.value === 0) {
+    toast('Informe a quantidade do produto!', {
+      type: 'warning',
+      dangerouslyHTMLString: true
+    })
+    precoTotal.value = 0
+    return
+  }
+
+  if (quantidade.value !== null || quantidade.value > 0) {
+    precoTotal.value = quantidade.value * precoUnitario.value
+  }
+}
+
+// const adicionaItem = () => {
+
+// }
 </script>
 <template>
   <HeaderComponent />
@@ -43,31 +83,33 @@ const titleField = ref('Nova Venda')
             <img src="../../assets/icons/SearchIcon.svg" width="15" height="15" />
           </button>
         </div>
-        <div class="mx-3">
+        <div class="mx-2">
+          <label for="precoUnitario" class="form-label mb-0">Preço Unitário:</label>
+          <money
+            class="form-control"
+            style="width: 10rem; height: 2.5rem"
+            v-model="precoUnitario"
+            v-bind="maskMoney"
+          />
+        </div>
+        <div class="mx-2">
           <label for="quantidade" class="form-label mb-0">Quantidade:</label>
           <input
             type="number"
             class="form-control"
-            id="quantidade"
+            v-model="quantidade"
+            @blur="calcQtde"
             style="height: 2.5rem; width: 7rem"
           />
         </div>
-        <div class="mx-2">
-          <label for="unitario" class="form-label mb-0">Preço Unitário:</label>
-          <input
-            type="number"
-            class="form-control"
-            id="quantidade"
-            style="height: 2.5rem; width: 10rem"
-          />
-        </div>
         <div>
-          <label for="total" class="form-label mb-0">Preço Total:</label>
-          <input
-            type="number"
+          <label for="precoTotal" class="form-label mb-0">Preço Total:</label>
+          <money
             class="form-control"
-            id="total"
-            style="height: 2.5rem; width: 10rem"
+            style="width: 10rem; height: 2.5rem"
+            v-model="precoTotal"
+            v-bind="maskMoney"
+            disabled
           />
         </div>
         <div class="mx-4" style="margin-top: 1.5rem">
