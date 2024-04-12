@@ -184,6 +184,11 @@ footer {
   color: #fff;
 }
 
+.botao-confirmar:focus {
+  background-color: #4ab97a;
+  color: #fff;
+}
+
 .cor-texto-cabecalho {
   color: #fd9485;
 }

@@ -7,18 +7,19 @@ import { ref } from 'vue'
 import { Money } from 'v-money3'
 import { toast } from 'vue3-toastify'
 
+const pedidoTabela = ref({
+  fields: Array,
+  data: Array,
+  colunas: Array
+})
+
 const titleField = ref('Nova Venda')
+const produto = ref('')
 const quantidade = ref(0)
 const precoUnitario = ref(0)
 const precoTotal = ref(0)
-// const itensPedido = ref([])
 
-// const itemVenda = ref({
-//   produto: String,
-//   quantidadeProduto: Number,
-//   precoUnitarioProduto: Number,
-//   precoTotalProduto: Number
-// })
+let itensPedido = []
 
 const maskMoney = ref({
   decimal: ',',
@@ -43,9 +44,17 @@ const calcQtde = () => {
   }
 }
 
-// const adicionaItem = () => {
+const adicionaItem = () => {
+  let novoItem = {
+    nomeProduto: produto.value,
+    quantidadeProduto: quantidade.value,
+    precoUnitarioProduto: precoUnitario.value,
+    precoTotalProduto: precoTotal.value
+  }
 
-// }
+  itensPedido.push(novoItem)
+  console.log(itensPedido)
+}
 </script>
 <template>
   <HeaderComponent />
@@ -74,7 +83,7 @@ const calcQtde = () => {
           <input
             type="text"
             class="form-control"
-            id="produto"
+            v-model="produto"
             style="height: 2.5rem; width: 30rem"
           />
         </div>
@@ -113,7 +122,7 @@ const calcQtde = () => {
           />
         </div>
         <div class="mx-4" style="margin-top: 1.5rem">
-          <button class="btn botao-confirmar mx-2">
+          <button class="btn botao-confirmar mx-2" @click="adicionaItem">
             Adicionar
             <img src="../../assets/icons/PlusIcon.svg" width="15" height="15" />
           </button>
