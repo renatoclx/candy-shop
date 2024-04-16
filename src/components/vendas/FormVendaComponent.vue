@@ -7,10 +7,10 @@ import { ref } from 'vue'
 import { Money } from 'v-money3'
 import { toast } from 'vue3-toastify'
 
-const pedidoTabela = ref({
-  fields: Array,
-  data: Array,
-  colunas: Array
+let pedidoTabela = ref({
+  fields: ['nomeProduto', 'quantidadeProduto', 'precoUnitarioProduto', 'precoTotalProduto'],
+  data: [],
+  colunas: ['Produto', 'Quantidade', 'Preço de Custo', 'Preço Total']
 })
 
 const titleField = ref('Nova Venda')
@@ -18,8 +18,8 @@ const produto = ref('')
 const quantidade = ref(0)
 const precoUnitario = ref(0)
 const precoTotal = ref(0)
-
-let itensPedido = []
+const totalPedido = ref(0)
+let totalFinal = 0
 
 const maskMoney = ref({
   decimal: ',',
@@ -52,8 +52,14 @@ const adicionaItem = () => {
     precoTotalProduto: precoTotal.value
   }
 
-  itensPedido.push(novoItem)
-  console.log(itensPedido)
+  totalPedido.value = totalPedido.value + precoTotal.value
+  pedidoTabela.value.data.push(novoItem)
+
+  let convertTotal = parseFloat(precoTotal.value)
+
+  totalFinal = totalFinal + convertTotal
+
+  totalPedido.value = totalFinal
 }
 </script>
 <template>
@@ -122,7 +128,7 @@ const adicionaItem = () => {
           />
         </div>
         <div class="mx-4" style="margin-top: 1.5rem">
-          <button class="btn botao-confirmar mx-2" @click="adicionaItem">
+          <button class="btn botao-confirmar mx-2" type="submit" @click.prevent="adicionaItem">
             Adicionar
             <img src="../../assets/icons/PlusIcon.svg" width="15" height="15" />
           </button>
@@ -132,19 +138,21 @@ const adicionaItem = () => {
         <table id="tableProdutos" class="table table-striped">
           <thead>
             <tr style="vertical-align: middle">
-              <th>Produto</th>
-              <th>Quantidade</th>
-              <th>Preço de Custo</th>
-              <th>Preço Total</th>
+              <th v-for="(coluna, index) in pedidoTabela.colunas" :key="index">
+                {{ coluna }}
+              </th>
               <th>Ações</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+            <tr
+              style="vertical-align: middle"
+              v-for="(item, itemIndex) in pedidoTabela.data"
+              :key="itemIndex"
+            >
+              <td v-for="(field, fieldIndex) in pedidoTabela.fields" :key="fieldIndex">
+                {{ item[field] }}
+              </td>
               <td style="width: 250px">
                 <button class="btn botao-limpar">
                   <img src="../../assets/icons/RemoveIcon.svg" alt="" width="15" height="15" />
@@ -156,8 +164,17 @@ const adicionaItem = () => {
       </div>
       <div class="bloco-form" style="justify-content: space-between; align-items: center">
         <div style="display: flex; flex-direction: row">
-          <h6>Total do Pedido (R$):</h6>
-          <h6 class="mx-2" style="color: #fd9485">15,89</h6>
+          <h6 style="margin-top: 2px">Total do Pedido:</h6>
+          <h5 class="mx-2">
+            <money
+              class="form-label"
+              id="totalPedido"
+              v-model="totalPedido"
+              v-bind="maskMoney"
+              style="color: #fd9485; border: 0; background: border-box; font-weight: 500"
+              disabled
+            />
+          </h5>
         </div>
         <div>
           <button class="btn botao-confirmar">
