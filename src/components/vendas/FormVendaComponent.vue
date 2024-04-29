@@ -14,6 +14,7 @@ let pedidoTabela = ref({
 })
 
 const titleField = ref('Nova Venda')
+const idVenda = ref(0)
 const produto = ref('')
 const quantidade = ref(0)
 const precoUnitario = ref(0)
@@ -45,7 +46,9 @@ const calcQtde = () => {
 }
 
 const adicionaItem = () => {
+  idVenda.value++
   let novoItem = {
+    id: idVenda.value,
     nomeProduto: produto.value,
     quantidadeProduto: quantidade.value,
     precoUnitarioProduto: precoUnitario.value,
@@ -60,6 +63,17 @@ const adicionaItem = () => {
   totalFinal = totalFinal + convertTotal
 
   totalPedido.value = totalFinal
+}
+
+const removeItem = (id) => {
+  let precoTotalProduto = pedidoTabela.value.data[id].precoTotalProduto
+  let convertValorProduto = parseFloat(precoTotalProduto)
+
+  totalFinal = totalFinal - convertValorProduto
+  totalPedido.value = totalFinal
+
+  pedidoTabela.value.data.splice(id, 1)
+  console.log(pedidoTabela.value.data)
 }
 </script>
 <template>
@@ -149,12 +163,13 @@ const adicionaItem = () => {
               style="vertical-align: middle"
               v-for="(item, itemIndex) in pedidoTabela.data"
               :key="itemIndex"
+              :id="itemIndex"
             >
               <td v-for="(field, fieldIndex) in pedidoTabela.fields" :key="fieldIndex">
                 {{ item[field] }}
               </td>
               <td style="width: 250px">
-                <button class="btn botao-limpar">
+                <button class="btn botao-limpar" @click="removeItem(itemIndex)">
                   <img src="../../assets/icons/RemoveIcon.svg" alt="" width="15" height="15" />
                 </button>
               </td>
