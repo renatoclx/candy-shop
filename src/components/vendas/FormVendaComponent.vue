@@ -63,6 +63,12 @@ const adicionaItem = () => {
   totalFinal = totalFinal + convertTotal
 
   totalPedido.value = totalFinal
+
+  produto.value = ''
+  quantidade.value = 0
+  precoUnitario.value = 0
+  precoTotal.value = 0
+  produto.value.focus()
 }
 
 const removeItem = (id) => {
