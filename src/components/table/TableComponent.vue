@@ -2,8 +2,19 @@
 const props = defineProps({
   fields: Array,
   data: Array,
-  columnNames: Array
+  columnNames: Array,
 })
+
+const emit = defineEmits(['delete', 'update']);
+
+const deleteItem = (id) => {
+  emit("delete", id)
+}
+
+const updateItem = (id) => {
+  emit("update", id)
+}
+
 </script>
 <template>
   <table id="tableComponent" class="table table-striped">
@@ -21,14 +32,12 @@ const props = defineProps({
           {{ item[field] }}
         </td>
         <td style="width: 250px">
-          <button class="btn botao-pesquisar">
-            <img src="../../assets/icons/ViewIcon.svg" alt="Visualizar" width="15" height="15" />
-          </button>
+
           <button class="btn botao-alterar mx-2">
-            <img src="../../assets/icons/PenIcon.svg" alt="" width="15" height="15" />
+            <img src="../../assets/icons/PenIcon.svg" alt="" width="15" height="15" @click="updateItem(item.id)" />
           </button>
           <button class="btn botao-limpar">
-            <img src="../../assets/icons/RemoveIcon.svg" alt="" width="15" height="15" />
+            <img src="../../assets/icons/RemoveIcon.svg" alt="" width="15" height="15" @click="deleteItem(item.id)"/>
           </button>
         </td>
       </tr>
