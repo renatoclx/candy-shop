@@ -17,7 +17,7 @@ const data = ref([]);
 
 const handleDeleteProduto = (id) => {
   Swal.fire({
-        title: "Deseja excluir o Produto?",
+        title: "Deseja excluir o ?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
