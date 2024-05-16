@@ -3,9 +3,13 @@ import HeaderComponent from '../header/HeaderComponent.vue'
 import FooterComponent from '../footer/FooterComponent.vue'
 import TitleComponent from '../title/TitleComponent.vue'
 
+import api from '@/config/axios'
+import Swal from 'sweetalert2'
+
 import { Money } from 'v-money3'
 
 import { ref } from 'vue'
+import router from '@/router'
 
 const titleField = ref('Cadastrar Produto')
 
@@ -30,6 +34,40 @@ const limparCampos = () => {
 
 const submitForm = () => {
   submitted.value = true
+}
+
+const insertProduto = () => {
+
+  Swal.fire({
+        title: "Deseja inserir o Produto?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim",
+        cancelButtonText: "Não"
+      }).then( async (result) => {
+
+        let response = await  api.post(`/produto`, {
+          nome: nomeProduto.value,
+          precoCusto: precoCusto.value,
+          precoVenda: precoVenda.value,
+          ativo: 1
+        });
+
+        let produtoInserido = response;
+
+        if(result.isConfirmed) {
+            Swal.fire({
+              title: produtoInserido.data,
+              icon: "success"
+            });
+
+            limparCampos();
+            router.push("/produtos");
+
+          }       
+      })
 }
 
 </script>
@@ -84,7 +122,7 @@ const submitForm = () => {
         </router-link>
         
         <button class="btn botao-pesquisar mx-3 btn-lg" @click="limparCampos">Limpar</button>
-        <button class="btn botao-confirmar btn-lg">Inserir</button>
+        <button class="btn botao-confirmar btn-lg" @click="insertProduto">Inserir</button>
       </div>
     </form>
     </div>
