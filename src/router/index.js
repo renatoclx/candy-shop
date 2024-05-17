@@ -53,6 +53,18 @@ const router = createRouter({
       meta: { layout: 'form-product-component' }
     },
     {
+      path: '/produtos/:id',
+      name: 'AlteraProduto',
+      component: () => import('../components/produtos/FormProdutoComponent.vue'),
+      props: route => ({
+        id: route.params.id,
+        nomeProduto: route.query.nome,
+        precoCusto: route.query.custo,
+        precoVenda: route.query.venda
+      }),
+      meta: { layout: 'form-product-component' }
+    },
+    {
       path: '/vendas',
       name: 'Vendas',
       component: () => import('../components/vendas/VendasComponent.vue'),

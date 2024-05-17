@@ -4,16 +4,47 @@ import FooterComponent from '../footer/FooterComponent.vue'
 import TitleComponent from '../title/TitleComponent.vue'
 import TableComponent from '../table/TableComponent.vue'
 import api from '@/config/axios'
-import { updateAlert } from '@/utils/alerts'
 import Swal from 'sweetalert2'
 
 import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const fields = ['nome', 'preco_custo', 'preco_venda']
 const columnNames = ['Nome', 'Preço de Custo', 'Preço de Venda']
 const titleField = ref('Produtos')
 
 const data = ref([]);
+
+const editProduto = (id, nome, custo, venda) => {
+  router.push({
+    name: "AlteraProduto",
+    params: { id: id},
+    query: {
+      nomeProduto: nome,
+      precoCusto: custo,
+      precoVenda: venda
+    }
+  })
+}
+
+const handleUpdateProduto = async (id) => {
+  try {
+    let response = await api.get(`/produto/${id}`);
+    let produto = response.data
+
+    editProduto(
+      id, 
+      produto.nome, 
+      produto.precoCusto, 
+      produto.precoVenda
+    );
+    
+  } catch(e) {
+    console.error(e)
+  }
+}
 
 const handleDeleteProduto = (id) => {
   Swal.fire({
@@ -40,9 +71,7 @@ const handleDeleteProduto = (id) => {
       })
 }
 
-const handleUpdateProduto = (id) => {
-  updateAlert(id)
-}
+
 
 onMounted(() => {
   listaProdutos();

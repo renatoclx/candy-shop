@@ -8,10 +8,16 @@ import Swal from 'sweetalert2'
 
 import { Money } from 'v-money3'
 
-import { ref } from 'vue'
-import router from '@/router'
+import { onMounted, ref } from 'vue'
+// import router from '@/router'
+import { useRouter, useRoute } from 'vue-router';
+import { computed } from 'vue';
 
+const route = useRoute();
+const router = useRouter();
 const titleField = ref('Cadastrar Produto')
+
+const isEditMode = computed(() => !!route.params.id);
 
 const maskMoney = ref({
   decimal: ',',
@@ -26,6 +32,26 @@ const precoCusto = ref(0);
 const precoVenda = ref(0);
 const submitted = ref(false)
 
+const produto = ref({
+  id: null,
+  nome: '',
+  precoCusto: 0,
+  precoVenda: 0
+});
+
+onMounted(() => {
+  if (isEditMode.value) {
+    produto.value.id = route.params.id;
+    produto.value.nome = route.query.nomeProduto;
+    produto.value.precoCusto = parseFloat(route.query.precoCusto);
+    produto.value.precoVenda = parseFloat(route.query.precoVenda);
+
+    nomeProduto.value = produto.value.nome;
+    precoCusto.value = produto.value.precoCusto;
+    precoVenda.value = produto.value.precoVenda;
+  }
+});
+
 const limparCampos = () => {
   nomeProduto.value = "";
   precoCusto.value = 0;
@@ -36,9 +62,14 @@ const submitForm = () => {
   submitted.value = true
 }
 
-const insertProduto = () => {
+const salvarProduto = async () => {
+  try {
+    if(isEditMode.value) {
 
-  Swal.fire({
+      //let response = await api.put(`/produto/${props.id}`, produto.value);
+      // console.log(response);
+    } else {
+      Swal.fire({
         title: "Deseja inserir o Produto?",
         icon: "warning",
         showCancelButton: true,
@@ -64,10 +95,13 @@ const insertProduto = () => {
             });
 
             limparCampos();
-            router.push("/produtos");
-
           }       
       })
+    }
+    router.push("/produtos");
+  } catch(e) {
+    console.error(e);
+  }
 }
 
 </script>
@@ -122,7 +156,7 @@ const insertProduto = () => {
         </router-link>
         
         <button class="btn botao-pesquisar mx-3 btn-lg" @click="limparCampos">Limpar</button>
-        <button class="btn botao-confirmar btn-lg" @click="insertProduto">Inserir</button>
+        <button class="btn botao-confirmar btn-lg" @click="salvarProduto">Inserir</button>
       </div>
     </form>
     </div>
