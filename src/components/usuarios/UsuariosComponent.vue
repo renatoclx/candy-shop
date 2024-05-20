@@ -3,17 +3,98 @@ import HeaderComponent from '../header/HeaderComponent.vue'
 import FooterComponent from '../footer/FooterComponent.vue'
 import TitleComponent from '../title/TitleComponent.vue'
 import TableComponent from '../table/TableComponent.vue'
+import api from '@/config/axios'
+import Swal from 'sweetalert2'
 
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router';
 
-const columnNames = ['ID', 'Nome', 'Login']
+const router = useRouter();
+
 const fields = ['id', 'nome', 'login']
+const columnNames = ['ID', 'Nome', 'Login']
 const titleField = ref('Usuários')
 
-const data = [
-  { id: 1, nome: 'Renato Jean', login: 'renatojean' },
-  { id: 2, nome: 'Michael Jordan', login: 'michaeljordan' }
-]
+const data = ref([]);
+
+onMounted(() => {
+  listaUsuarios();
+})
+
+const editUsuario = (id, nome, login, senha) => {
+  router.push({
+    name: "AlteraUsuario",
+    params: { id: id},
+    query: {
+      nome: nome,
+      login: login,
+      senha: senha
+    }
+  })
+}
+
+const handleUpdateUsuario = async (id) => {
+  try {
+    let response = await api.get(`/usuario/${id}`);
+    let usuario = response.data
+
+    editUsuario(
+      id, 
+      usuario.nome, 
+      usuario.login, 
+      usuario.senha
+    );
+    
+  } catch(e) {
+    console.error(e)
+  }
+}
+
+const  listaUsuarios = async () => {
+
+  try {
+    let response = await api.get("/usuario");
+    let usuarios = response.data;
+
+    for(let i = 0; i < usuarios.length; i++) {
+      let usuario = {};
+      usuario.id = usuarios[i].id;
+      usuario.nome = usuarios[i].nome;
+      usuario.login = usuarios[i].login;
+      usuario.preco_venda = usuarios[i].precoVenda;
+     
+      data.value.push(usuario);
+    }
+
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+const handleDeleteUsuario = (id) => {
+  Swal.fire({
+        title: "Deseja excluir o Usuário?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim",
+        cancelButtonText: "Não"
+      }).then((result) => {
+
+        api.delete(`/usuario/${id}`).then(() => {
+          
+          if(result.isConfirmed) {
+            Swal.fire({
+              title: "Usuário excluido!",
+              icon: "success"
+            });
+          }
+          data.value = [];
+          listaUsuarios();
+        })
+      })
+}
 </script>
 <template>
   <HeaderComponent />
@@ -42,7 +123,13 @@ const data = [
         </div>
       </div>
       <div class="mt-2 table-responsive my-5" style="width: 100%">
-        <TableComponent :fields="fields" :data="data" :column-names="columnNames"></TableComponent>
+        <TableComponent 
+          :fields="fields" 
+          :data="data" 
+          :column-names="columnNames"
+          @delete="handleDeleteUsuario" 
+          @update="handleUpdateUsuario"
+          ></TableComponent>
       </div>
     </div>
   </div>

@@ -71,8 +71,6 @@ const handleDeleteProduto = (id) => {
       })
 }
 
-
-
 onMounted(() => {
   listaProdutos();
 })
