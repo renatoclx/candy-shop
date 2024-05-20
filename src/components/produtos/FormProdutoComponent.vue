@@ -83,22 +83,22 @@ const salvarProduto = async () => {
 
     } else {
       
-        let response = await  api.post(`/produto`, {
-          nome: nomeProduto.value,
-          precoCusto: precoCusto.value,
-          precoVenda: precoVenda.value,
-          ativo: 1
-        });
+      let response = await  api.post(`/produto`, {
+        nome: nomeProduto.value,
+        precoCusto: precoCusto.value,
+        precoVenda: precoVenda.value,
+        ativo: 1
+      });
 
-        let inserido = response.data;
-        console.log(inserido);
+      let inserido = response.data;
+      console.log(inserido);
 
-        Swal.fire({
-          title: inserido,
-          icon: "success"
-        });
+      Swal.fire({
+        title: inserido,
+        icon: "success"
+      });
 
-        limparCampos();
+      limparCampos();
           
     }
 

@@ -4,14 +4,31 @@ import FooterComponent from '../footer/FooterComponent.vue'
 import TitleComponent from '../title/TitleComponent.vue'
 import { toast } from 'vue3-toastify'
 
-import { ref } from 'vue'
+import api from '@/config/axios'
+import Swal from 'sweetalert2'
 
+import { onMounted, ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router';
+import { computed } from 'vue';
+
+const route = useRoute();
+const router = useRouter();
 const titleField = ref('Cadastrar Usuário')
+
 const nomeUsuario = ref('')
 const loginUsuario = ref('')
 const senhaUsuario = ref('')
 const confirmSenha = ref('')
 const submitted = ref(false)
+
+const isEditMode = computed(() => !!route.params.id);
+
+const usuario = ref({
+  id: null,
+  nome: '',
+  login: '',
+  senha: ''
+});
 
 const submitForm = () => {
   submitted.value = true
@@ -26,6 +43,70 @@ const validaSenha = () => {
     confirmSenha.value = ''
   }
 }
+
+onMounted(() => {
+  if (isEditMode.value) {
+    usuario.value.id = route.params.id;
+    usuario.value.nome = route.query.nome;
+    usuario.value.login = route.query.login;
+    usuario.value.senha = route.query.senha;
+
+    nomeUsuario.value = usuario.value.nome;
+    loginUsuario.value = usuario.value.login;
+    senhaUsuario.value = usuario.value.senha;
+  }
+});
+
+const limparCampos = () => {
+  nomeUsuario.value = "";
+  loginUsuario.value = "";
+  senhaUsuario.value = "";
+  confirmSenha.value = '';
+}
+
+const salvarUsuario = async () => {
+  try {
+    if(isEditMode.value) {
+      let response = await api.put(`/usuario/${route.params.id}`, {
+        nome: nomeUsuario.value,
+        login: loginUsuario.value,
+        senha: senhaUsuario.value,
+        ativo: 1
+      });
+
+      let update = response.data
+
+      Swal.fire({
+        title: "Usuário " + update.nome + " alterado com sucesso!",
+        icon: "success"
+        });
+
+      limparCampos();
+    } else {
+      let response = await  api.post(`/usuario`, {
+        nome: nomeUsuario.value,
+        login: loginUsuario.value,
+        senha: senhaUsuario.value,
+        ativo: 1
+      });
+
+      let inserido = response.data;
+      console.log(inserido);
+
+      Swal.fire({
+        title: inserido,
+        icon: "success"
+      });
+
+      limparCampos();
+    }
+
+    router.push("/usuarios");
+  } catch(e) {
+    console.error(e)
+  }
+}
+
 </script>
 <template>
   <HeaderComponent />
@@ -91,9 +172,12 @@ const validaSenha = () => {
           </div>
         </div>
         <div class="bloco" style="display: flex; justify-content: center; margin-top: 2rem">
-          <button class="btn botao-limpar btn-lg">Voltar</button>
+          <router-link to="/usuarios">
+            <button class="btn botao-limpar btn-lg">Voltar</button>
+        </router-link>
+          
           <button class="btn botao-pesquisar mx-3 btn-lg">Limpar</button>
-          <button class="btn botao-confirmar btn-lg" type="submit">Inserir</button>
+          <button class="btn botao-confirmar btn-lg" @click="salvarUsuario" type="submit">Inserir</button>
         </div>
       </form>
     </div>
