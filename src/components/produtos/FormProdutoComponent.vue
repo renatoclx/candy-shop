@@ -9,7 +9,6 @@ import Swal from 'sweetalert2'
 import { Money } from 'v-money3'
 
 import { onMounted, ref } from 'vue'
-// import router from '@/router'
 import { useRouter, useRoute } from 'vue-router';
 import { computed } from 'vue';
 
