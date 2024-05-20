@@ -66,19 +66,24 @@ const salvarProduto = async () => {
   try {
     if(isEditMode.value) {
 
-      //let response = await api.put(`/produto/${props.id}`, produto.value);
-      // console.log(response);
-    } else {
-      Swal.fire({
-        title: "Deseja inserir o Produto?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Sim",
-        cancelButtonText: "Não"
-      }).then( async (result) => {
+      let response = await api.put(`/produto/${route.params.id}`, {
+        nome: nomeProduto.value,
+        precoCusto: precoCusto.value,
+        precoVenda: precoVenda.value,
+        ativo: 1
+      });
 
+      let update = response.data
+
+      Swal.fire({
+        title: "Produto " + update.nome + " alterado com sucesso!",
+        icon: "success"
+        });
+
+      limparCampos();
+
+    } else {
+      
         let response = await  api.post(`/produto`, {
           nome: nomeProduto.value,
           precoCusto: precoCusto.value,
@@ -86,18 +91,18 @@ const salvarProduto = async () => {
           ativo: 1
         });
 
-        let produtoInserido = response;
+        let inserido = response.data;
+        console.log(inserido);
 
-        if(result.isConfirmed) {
-            Swal.fire({
-              title: produtoInserido.data,
-              icon: "success"
-            });
+        Swal.fire({
+          title: inserido,
+          icon: "success"
+        });
 
-            limparCampos();
-          }       
-      })
+        limparCampos();
+          
     }
+
     router.push("/produtos");
   } catch(e) {
     console.error(e);
@@ -156,7 +161,7 @@ const salvarProduto = async () => {
         </router-link>
         
         <button class="btn botao-pesquisar mx-3 btn-lg" @click="limparCampos">Limpar</button>
-        <button class="btn botao-confirmar btn-lg" @click="salvarProduto">Inserir</button>
+        <button class="btn botao-confirmar btn-lg" @click="salvarProduto" type="submit">Inserir</button>
       </div>
     </form>
     </div>
