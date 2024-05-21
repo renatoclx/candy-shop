@@ -91,7 +91,6 @@ const salvarProduto = async () => {
       });
 
       let inserido = response.data;
-      console.log(inserido);
 
       Swal.fire({
         title: inserido,
@@ -115,7 +114,7 @@ const salvarProduto = async () => {
   <div class="principal">
     <div class="conteudo">
       <TitleComponent :title="titleField" />
-      <form  @submit.prevent="submitForm">
+      <form @submit.prevent="submitForm">
       <div class="bloco-form">
         <div>
           <label for="nomeProduto" class="form-label mb-0">Nome do Produto:</label>

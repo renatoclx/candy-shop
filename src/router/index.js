@@ -29,6 +29,25 @@ const router = createRouter({
       meta: { layout: 'form-client-component' }
     },
     {
+      path: '/clientes/:id',
+      name: 'AlteraCliente',
+      component: () => import('../components/clientes/FormClientComponent.vue'),
+      props: route => ({
+        id: route.params.id,
+        nome: route.query.nome,
+        cpfCnpj: route.query.cpfCnpj,
+        inscEstadual: route.query.inscEstadual,
+        cep: route.query.cep,
+        logradouro: route.query.logradouro,
+        numero: route.query.numero, 
+        bairro: route.query.bairro,
+        complemento: route.query.complemento, 
+        cidade: route.query.cidade, 
+        estado: route.query.estado
+      }),
+      meta: { layout: 'form-client-component' }
+    },
+    {
       path: '/usuarios',
       name: 'Usuários',
       component: () => import('../components/usuarios/UsuariosComponent.vue'),

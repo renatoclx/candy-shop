@@ -36,7 +36,7 @@ const editCliente = (
   estado
   ) => {
   router.push({
-    name: "AlteraUsuario",
+    name: "AlteraCliente",
     params: { id: id},
     query: {
       nome: nome,
@@ -57,7 +57,7 @@ const handleUpdateCliente = async (id) => {
   try {
     let response = await api.get(`/cliente/${id}`);
     let cliente = response.data
-
+    console.log(cliente);
     editCliente(
       id,
       cliente.nome,
