@@ -4,13 +4,126 @@ import FooterComponent from '../footer/FooterComponent.vue'
 import TableComponent from '../table/TableComponent.vue'
 import TitleComponent from '../title/TitleComponent.vue'
 
-import { ref } from 'vue'
+import api from '@/config/axios'
+import Swal from 'sweetalert2'
 
-const fields = ['nome', 'insc_estadual', 'cidade']
-const columnNames = ['Nome/Razão Social', 'Insc. Estadual', 'Cidade']
+import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const fields = ['nome', 'cpfCnpj', 'cidade']
+const columnNames = ['Nome/Razão Social', 'CPF/CNPJ', 'Cidade']
 const titleField = ref('Clientes')
 
-const data = [{ id: 1, nome: 'Abiola Esther', insc_estadual: '481.468.151.654', cidade: 'Osasco' }]
+const data = ref([]);
+
+onMounted(() => {
+  listaClientes();
+})
+
+const editCliente = (
+  id, 
+  nome,
+  docs,
+  inscEst, 
+  cep, 
+  logradouro, 
+  numero, 
+  bairro, 
+  complemento, 
+  cidade, 
+  estado
+  ) => {
+  router.push({
+    name: "AlteraUsuario",
+    params: { id: id},
+    query: {
+      nome: nome,
+      cpf_cnpj: docs,
+      insc_estadual: inscEst,
+      cep: cep,
+      logradouro: logradouro,
+      numero: numero,
+      bairro: bairro,
+      complemento: complemento,
+      cidade: cidade,
+      estado: estado
+    }
+  })
+}
+
+const handleUpdateCliente = async (id) => {
+  try {
+    let response = await api.get(`/cliente/${id}`);
+    let cliente = response.data
+
+    editCliente(
+      id,
+      cliente.nome,
+      cliente.cpfCnpj,
+      cliente.inscEstadual,
+      cliente.cep,
+      cliente.logradouro,
+      cliente.numero,
+      cliente.bairro,
+      cliente.complemento,
+      cliente.cidade,
+      cliente.estado
+    );
+    
+  } catch(e) {
+    console.error(e)
+  }
+}
+
+const listaClientes = async () => {
+
+  try {
+    let response = await api.get("/cliente");
+    let clientes = response.data;
+    console.log(clientes);
+
+    for(let i = 0; i < clientes.length; i++) {
+      let cliente = {};
+      cliente.id = clientes[i].id;
+      cliente.nome = clientes[i].nome;
+      cliente.cpfCnpj = clientes[i].cpfCnpj;
+      cliente.cidade = clientes[i].cidade;
+    
+      data.value.push(cliente);
+    }
+
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+const handleDeleteCliente = (id) => {
+  Swal.fire({
+        title: "Deseja excluir o Cliente?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim",
+        cancelButtonText: "Não"
+      }).then((result) => {
+
+        api.delete(`/cliente/${id}`).then(() => {
+          
+          if(result.isConfirmed) {
+            Swal.fire({
+              title: "Cliente excluido!",
+              icon: "success"
+            });
+          }
+          data.value = [];
+          listaClientes();
+        })
+      })
+}
+
 </script>
 
 <template>
@@ -40,7 +153,12 @@ const data = [{ id: 1, nome: 'Abiola Esther', insc_estadual: '481.468.151.654', 
         </div>
       </div>
       <div class="mt-1 table-responsive my-5" style="width: 100%">
-        <TableComponent :fields="fields" :data="data" :column-names="columnNames"> </TableComponent>
+        <TableComponent 
+          :fields="fields" 
+          :data="data" 
+          :column-names="columnNames"
+          @delete="handleDeleteCliente"
+          @update="handleUpdateCliente"></TableComponent>
       </div>
     </div>
   </div>

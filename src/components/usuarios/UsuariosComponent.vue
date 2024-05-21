@@ -61,7 +61,6 @@ const  listaUsuarios = async () => {
       usuario.id = usuarios[i].id;
       usuario.nome = usuarios[i].nome;
       usuario.login = usuarios[i].login;
-      usuario.preco_venda = usuarios[i].precoVenda;
      
       data.value.push(usuario);
     }
