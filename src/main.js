@@ -19,6 +19,7 @@ import ProdutosComponent from './components/produtos/ProdutosComponent.vue'
 import VendasComponent from './components/vendas/VendasComponent.vue'
 import TableComponent from './components/table/TableComponent.vue'
 import TitleComponent from './components/title/TitleComponent.vue'
+import ModalComponent from './components/modal/ModalComponent.vue'
 
 import FormClientComponent from './components/clientes/FormClientComponent.vue'
 import FormProdutoComponent from './components/produtos/FormProdutoComponent.vue'
@@ -39,6 +40,7 @@ const app = createApp(App)
   .component('form-product-component', FormProdutoComponent)
   .component('form-user-component', FormUsuarioComponent)
   .component('form-venda-component', FormVendaComponent)
+  .component('modal-component', ModalComponent)
 
 app.use(router)
 app.use(Vue3Toastify)

@@ -2,10 +2,24 @@
 import HeaderComponent from '../header/HeaderComponent.vue'
 import FooterComponent from '../footer/FooterComponent.vue'
 import TitleComponent from '../title/TitleComponent.vue'
+import ModalComponent from '../modal/ModalComponent.vue'
 
 import { ref } from 'vue'
 import { Money } from 'v-money3'
 import { toast } from 'vue3-toastify'
+import api from '@/config/axios'
+
+let clienteTabela = ref({
+  fields: ["nome"],
+  data: [],
+  colunas: ['Cliente']
+})
+
+let produtoTabela = ref({
+  fields: ["nome"],
+  data: [],
+  colunas: ['Produto']
+})
 
 let pedidoTabela = ref({
   fields: ['nomeProduto', 'quantidadeProduto', 'precoUnitarioProduto', 'precoTotalProduto'],
@@ -13,13 +27,98 @@ let pedidoTabela = ref({
   colunas: ['Produto', 'Quantidade', 'Preço de Custo', 'Preço Total']
 })
 
+const findCliente = async (nome) => {
+
+  try {
+    if(cliente.value !== "") {
+    clienteTabela.value.data = [];
+    let response = await api.get(`/cliente/buscar?nome=${nome}`);
+    let clientes = response.data;
+
+    for(let i = 0; i < clientes.length; i++) {
+      let cliente = {};
+      cliente.id = clientes[i].id;
+      cliente.nome = clientes[i].nome;
+
+      clienteTabela.value.data.push(cliente);
+    }
+  }
+  } catch(e) {
+    console.error(e);
+  }
+
+}
+
+const findProduto = async (nome) => {
+
+try {
+  if(produto.value !== "") {
+  produtoTabela.value.data = [];
+  let response = await api.get(`/produto/buscar?nome=${nome}`);
+  let produtos = response.data;
+
+  for(let i = 0; i < produtos.length; i++) {
+    let produto = {};
+    produto.id = produtos[i].id;
+    produto.nome = produtos[i].nome;
+
+    produtoTabela.value.data.push(produto);
+  }
+}
+} catch(e) {
+  console.error(e);
+}
+
+}
+
+const selecionaCliente = (id) => {
+  let codigo = clienteTabela.value.data[id].id;
+  let nome = clienteTabela.value.data[id].nome;
+
+  closeableModal.value = false;
+  codCliente.value = codigo;
+  cliente.value = nome;
+
+}
+
+const selecionaProduto = (id) => {
+  let codigo = produtoTabela.value.data[id].id;
+  let nome = produtoTabela.value.data[id].nome;
+
+  closeableModal.value = false;
+  codProduto.value = codigo;
+  produto.value = nome;
+
+}
+const closeableModal = ref(false);
+
+const modalShowCliente = () => {
+  closeableModal.value = true;
+  isCliente.value = true;
+  isProduto.value = false;
+}
+
+const modalShowProduto = () => {
+  closeableModal.value = true;
+  isCliente.value = false;
+  isProduto.value = true;
+}
+
+
 const titleField = ref('Nova Venda')
-const idVenda = ref(0)
+const codProduto = ref(null)
 const produto = ref('')
 const quantidade = ref(0)
 const precoUnitario = ref(0)
 const precoTotal = ref(0)
 const totalPedido = ref(0)
+const codCliente = ref(null)
+const cliente = ref("");
+const produtos = ref([]);
+
+const isProduto = ref(false);
+const isCliente = ref(false);
+
 let totalFinal = 0
 
 const maskMoney = ref({
@@ -46,9 +145,8 @@ const calcQtde = () => {
 }
 
 const adicionaItem = () => {
-  idVenda.value++
   let novoItem = {
-    id: idVenda.value,
+    id: codProduto.value,
     nomeProduto: produto.value,
     quantidadeProduto: quantidade.value,
     precoUnitarioProduto: precoUnitario.value,
@@ -57,6 +155,7 @@ const adicionaItem = () => {
 
   totalPedido.value = totalPedido.value + precoTotal.value
   pedidoTabela.value.data.push(novoItem)
+  produtos.value.push(novoItem);
 
   let convertTotal = parseFloat(precoTotal.value)
 
@@ -68,7 +167,7 @@ const adicionaItem = () => {
   quantidade.value = 0
   precoUnitario.value = 0
   precoTotal.value = 0
-  produto.value.focus()
+
 }
 
 const removeItem = (id) => {
@@ -79,7 +178,11 @@ const removeItem = (id) => {
   totalPedido.value = totalFinal
 
   pedidoTabela.value.data.splice(id, 1)
-  console.log(pedidoTabela.value.data)
+}
+
+const realizaVenda = () => {
+  console.log(codCliente.value);
+  console.log(produtos.value);
 }
 </script>
 <template>
@@ -89,16 +192,19 @@ const removeItem = (id) => {
       <TitleComponent :title="titleField" />
       <div class="bloco-form" style="justify-content: center">
         <div>
+          <input type="hidden" id="codCliente" v-model="codCliente"/>
           <label for="cliente" class="form-label mb-0">Cliente:</label>
           <input
             type="text"
             class="form-control"
             id="cliente"
+            v-model="cliente"
+            @blur="findCliente(cliente)"
             style="height: 2.5rem; width: 35rem"
           />
         </div>
         <div style="margin-top: 1.5rem">
-          <button class="btn botao-pesquisar mx-2">
+          <button @click="modalShowCliente" type="button" class="btn botao-pesquisar mx-2">
             <img src="../../assets/icons/SearchIcon.svg" width="15" height="15" />
           </button>
         </div>
@@ -106,15 +212,17 @@ const removeItem = (id) => {
       <div class="bloco-form" style="justify-content: center">
         <div>
           <label for="produto" class="form-label mb-0">Produto:</label>
+          <input type="hidden" id="codProduto" v-model="codProduto"/>
           <input
             type="text"
             class="form-control"
             v-model="produto"
+            @blur="findProduto(produto)"
             style="height: 2.5rem; width: 30rem"
           />
         </div>
         <div style="margin-top: 1.5rem">
-          <button class="btn botao-pesquisar mx-2">
+          <button @click="modalShowProduto" class="btn botao-pesquisar mx-2">
             <img src="../../assets/icons/SearchIcon.svg" width="15" height="15" />
           </button>
         </div>
@@ -198,7 +306,7 @@ const removeItem = (id) => {
           </h5>
         </div>
         <div>
-          <button class="btn botao-confirmar">
+          <button class="btn botao-confirmar" @click="realizaVenda">
             <img src="../../assets/icons/SaleIcon.svg" alt="" width="15" height="15" />
             &nbsp;&nbsp;Realizar Venda
           </button>
@@ -207,4 +315,64 @@ const removeItem = (id) => {
     </div>
   </div>
   <FooterComponent />
+  <ModalComponent v-model="closeableModal" closeable header="Selecione">
+    <div v-if="isCliente && !isProduto">
+        <table id="tableClientes" class="table table-striped">
+          <thead>
+            <tr style="vertical-align: middle">
+              <th v-for="(coluna, index) in clienteTabela.colunas" :key="index">
+                {{ coluna }}
+              </th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              style="vertical-align: middle"
+              v-for="(item, itemIndex) in clienteTabela.data"
+              :key="itemIndex"
+              :id="itemIndex"
+            >
+              <td v-for="(field, fieldIndex) in clienteTabela.fields" :key="fieldIndex">
+                {{ item[field] }}
+              </td>
+              <td style="width: 250px">
+                <button class="btn botao-confirmar" @click="selecionaCliente(itemIndex)">
+                  <img src="../../assets/icons/SelectIcon.svg" alt="" width="15" height="15" />
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div v-if="!isCliente && isProduto">
+        <table id="tableProdutos" class="table table-striped">
+          <thead>
+            <tr style="vertical-align: middle">
+              <th v-for="(coluna, index) in produtoTabela.colunas" :key="index">
+                {{ coluna }}
+              </th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              style="vertical-align: middle"
+              v-for="(item, itemIndex) in produtoTabela.data"
+              :key="itemIndex"
+              :id="itemIndex"
+            >
+              <td v-for="(field, fieldIndex) in produtoTabela.fields" :key="fieldIndex">
+                {{ item[field] }}
+              </td>
+              <td style="width: 250px">
+                <button class="btn botao-confirmar" @click="selecionaProduto(itemIndex)">
+                  <img src="../../assets/icons/SelectIcon.svg" alt="" width="15" height="15" />
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>      
+  </ModalComponent>
 </template>
