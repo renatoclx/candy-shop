@@ -150,6 +150,14 @@ const salvarCliente = async () => {
 
       limparCampos();
     } else {
+      // console.log(inscEst.value);
+      // console.log(cep.value);
+      // console.log(logradouro.value);
+      // console.log(numero.value);
+      // console.log(bairro.value);
+      // console.log(complemento.value);
+      // console.log(estado.value);
+
       let response = await api.post(`/cliente`, {
         nome: nome.value,
         cpfCnpj: documento.value.replace(/\D/g, ''),
