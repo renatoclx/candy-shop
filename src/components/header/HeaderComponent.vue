@@ -1,5 +1,20 @@
 <script setup>
 import { RouterLink } from 'vue-router'
+import { useRouter } from 'vue-router';
+
+import { toast } from 'vue3-toastify';
+
+const router = useRouter();
+
+const logout = () => {
+    localStorage.setItem('token', null);
+    toast('Volte em breve!', {
+        type: 'success',
+        dangerouslyHTMLString: false
+      })
+    
+    router.push("/login");
+  }
 </script>
 
 <template>
@@ -17,12 +32,10 @@ import { RouterLink } from 'vue-router'
         <img src="../../assets/icons/MenuIcon.svg" width="25" height="25" />
       </button>
     </p>
-    <router-link to="/login">
-      <button class="btn botao-limpar mx-4 cor-texto">
+      <button class="btn botao-limpar mx-4 cor-texto" @click="logout">
         Sair
         <img src="../../assets/icons/SairIcon.svg" width="20" height="20" />
       </button>
-    </router-link>
 
     <div class="menu">
       <div class="collapse collapse-horizontal" id="collapseWidthExample">

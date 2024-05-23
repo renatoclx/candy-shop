@@ -8,7 +8,6 @@ import api from '@/config/axios'
 import Swal from 'sweetalert2'
 
 import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router';
 
 const columnNames = ['ID', 'Cliente', 'Valor do Pedido']
 const fields = ['vendaId', 'nome', 'precoTotalProduto']
@@ -20,8 +19,6 @@ onMounted(() => {
 
 
 const titleField = ref('Vendas')
-
-const router = useRouter();
 
 const listaVendas = async () => {
 

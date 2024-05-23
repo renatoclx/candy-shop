@@ -14,7 +14,8 @@ const router = createRouter({
     {
       path: '/',
       name: 'Home',
-      component: MainView
+      component: MainView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/clientes',
@@ -109,5 +110,14 @@ const router = createRouter({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token');
+  if (to.matched.some(record => record.meta.requiresAuth) && !token) {
+    next('/login');
+  } else {
+    next();
+  }
+});
 
 export default router

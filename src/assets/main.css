@@ -144,6 +144,11 @@ footer {
   color: #737373;
 }
 
+.botao-principal:hover {
+  background-color: #a7a767;
+  color: #fff;
+}
+
 .botao-limpar {
   background-color: #fd9485;
   color: #fff;
