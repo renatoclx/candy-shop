@@ -7,7 +7,10 @@ import ModalComponent from '../modal/ModalComponent.vue'
 import { ref } from 'vue'
 import { Money } from 'v-money3'
 import { toast } from 'vue3-toastify'
+import { useRouter } from 'vue-router';
 import api from '@/config/axios'
+
+const router = useRouter();
 
 let clienteTabela = ref({
   fields: ["nome"],
@@ -115,11 +118,16 @@ const totalPedido = ref(0)
 const codCliente = ref(null)
 const cliente = ref("");
 const produtos = ref([]);
+const submitted = ref(false);
 
 const isProduto = ref(false);
 const isCliente = ref(false);
 
 let totalFinal = 0
+
+const submitForm = () => {
+  submitted.value = true
+}
 
 const maskMoney = ref({
   decimal: ',',
@@ -180,9 +188,17 @@ const removeItem = (id) => {
   pedidoTabela.value.data.splice(id, 1)
 }
 
-const realizaVenda = () => {
-  console.log(codCliente.value);
-  console.log(produtos.value);
+const realizaVenda = async () => {
+
+  let response = await api.post("/venda", {
+    clienteId: codCliente.value,
+    itens: produtos.value
+  });
+
+  console.log(response.data);
+
+  router.push("/vendas");
+
 }
 </script>
 <template>
@@ -190,128 +206,130 @@ const realizaVenda = () => {
   <div class="principal">
     <div class="conteudo">
       <TitleComponent :title="titleField" />
-      <div class="bloco-form" style="justify-content: center">
-        <div>
-          <input type="hidden" id="codCliente" v-model="codCliente"/>
-          <label for="cliente" class="form-label mb-0">Cliente:</label>
-          <input
-            type="text"
-            class="form-control"
-            id="cliente"
-            v-model="cliente"
-            @blur="findCliente(cliente)"
-            style="height: 2.5rem; width: 35rem"
-          />
+      <form @submit.prevent="submitForm">
+        <div class="bloco-form" style="justify-content: center">
+          <div>
+            <input type="hidden" id="codCliente" v-model="codCliente"/>
+            <label for="cliente" class="form-label mb-0">Cliente:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="cliente"
+              v-model="cliente"
+              @blur="findCliente(cliente)"
+              style="height: 2.5rem; width: 35rem"
+            />
+          </div>
+          <div style="margin-top: 1.5rem">
+            <button @click="modalShowCliente" type="button" class="btn botao-pesquisar mx-2">
+              <img src="../../assets/icons/SearchIcon.svg" width="15" height="15" />
+            </button>
+          </div>
         </div>
-        <div style="margin-top: 1.5rem">
-          <button @click="modalShowCliente" type="button" class="btn botao-pesquisar mx-2">
-            <img src="../../assets/icons/SearchIcon.svg" width="15" height="15" />
-          </button>
-        </div>
-      </div>
-      <div class="bloco-form" style="justify-content: center">
-        <div>
-          <label for="produto" class="form-label mb-0">Produto:</label>
-          <input type="hidden" id="codProduto" v-model="codProduto"/>
-          <input
-            type="text"
-            class="form-control"
-            v-model="produto"
-            @blur="findProduto(produto)"
-            style="height: 2.5rem; width: 30rem"
-          />
-        </div>
-        <div style="margin-top: 1.5rem">
-          <button @click="modalShowProduto" class="btn botao-pesquisar mx-2">
-            <img src="../../assets/icons/SearchIcon.svg" width="15" height="15" />
-          </button>
-        </div>
-        <div class="mx-2">
-          <label for="precoUnitario" class="form-label mb-0">Preço Unitário:</label>
-          <money
-            class="form-control"
-            style="width: 10rem; height: 2.5rem"
-            v-model="precoUnitario"
-            v-bind="maskMoney"
-          />
-        </div>
-        <div class="mx-2">
-          <label for="quantidade" class="form-label mb-0">Quantidade:</label>
-          <input
-            type="number"
-            class="form-control"
-            v-model="quantidade"
-            @blur="calcQtde"
-            style="height: 2.5rem; width: 7rem"
-          />
-        </div>
-        <div>
-          <label for="precoTotal" class="form-label mb-0">Preço Total:</label>
-          <money
-            class="form-control"
-            style="width: 10rem; height: 2.5rem"
-            v-model="precoTotal"
-            v-bind="maskMoney"
-            disabled
-          />
-        </div>
-        <div class="mx-4" style="margin-top: 1.5rem">
-          <button class="btn botao-confirmar mx-2" type="submit" @click.prevent="adicionaItem">
-            Adicionar
-            <img src="../../assets/icons/PlusIcon.svg" width="15" height="15" />
-          </button>
-        </div>
-      </div>
-      <div>
-        <table id="tableProdutos" class="table table-striped">
-          <thead>
-            <tr style="vertical-align: middle">
-              <th v-for="(coluna, index) in pedidoTabela.colunas" :key="index">
-                {{ coluna }}
-              </th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              style="vertical-align: middle"
-              v-for="(item, itemIndex) in pedidoTabela.data"
-              :key="itemIndex"
-              :id="itemIndex"
-            >
-              <td v-for="(field, fieldIndex) in pedidoTabela.fields" :key="fieldIndex">
-                {{ item[field] }}
-              </td>
-              <td style="width: 250px">
-                <button class="btn botao-limpar" @click="removeItem(itemIndex)">
-                  <img src="../../assets/icons/RemoveIcon.svg" alt="" width="15" height="15" />
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="bloco-form" style="justify-content: space-between; align-items: center">
-        <div style="display: flex; flex-direction: row">
-          <h6 style="margin-top: 2px">Total do Pedido:</h6>
-          <h5 class="mx-2">
+        <div class="bloco-form" style="justify-content: center">
+          <div>
+            <label for="produto" class="form-label mb-0">Produto:</label>
+            <input type="hidden" id="codProduto" v-model="codProduto"/>
+            <input
+              type="text"
+              class="form-control"
+              v-model="produto"
+              @blur="findProduto(produto)"
+              style="height: 2.5rem; width: 30rem"
+            />
+          </div>
+          <div style="margin-top: 1.5rem">
+            <button @click="modalShowProduto" class="btn botao-pesquisar mx-2">
+              <img src="../../assets/icons/SearchIcon.svg" width="15" height="15" />
+            </button>
+          </div>
+          <div class="mx-2">
+            <label for="precoUnitario" class="form-label mb-0">Preço Unitário:</label>
             <money
-              class="form-label"
-              id="totalPedido"
-              v-model="totalPedido"
+              class="form-control"
+              style="width: 10rem; height: 2.5rem"
+              v-model="precoUnitario"
               v-bind="maskMoney"
-              style="color: #fd9485; border: 0; background: border-box; font-weight: 500"
+            />
+          </div>
+          <div class="mx-2">
+            <label for="quantidade" class="form-label mb-0">Quantidade:</label>
+            <input
+              type="number"
+              class="form-control"
+              v-model="quantidade"
+              @blur="calcQtde"
+              style="height: 2.5rem; width: 7rem"
+            />
+          </div>
+          <div>
+            <label for="precoTotal" class="form-label mb-0">Preço Total:</label>
+            <money
+              class="form-control"
+              style="width: 10rem; height: 2.5rem"
+              v-model="precoTotal"
+              v-bind="maskMoney"
               disabled
             />
-          </h5>
+          </div>
+          <div class="mx-4" style="margin-top: 1.5rem">
+            <button class="btn botao-confirmar mx-2" type="submit" @click.prevent="adicionaItem">
+              Adicionar
+              <img src="../../assets/icons/PlusIcon.svg" width="15" height="15" />
+            </button>
+          </div>
         </div>
         <div>
-          <button class="btn botao-confirmar" @click="realizaVenda">
-            <img src="../../assets/icons/SaleIcon.svg" alt="" width="15" height="15" />
-            &nbsp;&nbsp;Realizar Venda
-          </button>
+          <table id="tableProdutos" class="table table-striped">
+            <thead>
+              <tr style="vertical-align: middle">
+                <th v-for="(coluna, index) in pedidoTabela.colunas" :key="index">
+                  {{ coluna }}
+                </th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                style="vertical-align: middle"
+                v-for="(item, itemIndex) in pedidoTabela.data"
+                :key="itemIndex"
+                :id="itemIndex"
+              >
+                <td v-for="(field, fieldIndex) in pedidoTabela.fields" :key="fieldIndex">
+                  {{ item[field] }}
+                </td>
+                <td style="width: 250px">
+                  <button class="btn botao-limpar" @click="removeItem(itemIndex)">
+                    <img src="../../assets/icons/RemoveIcon.svg" alt="" width="15" height="15" />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </div>
+        <div class="bloco-form" style="justify-content: space-between; align-items: center">
+          <div style="display: flex; flex-direction: row">
+            <h6 style="margin-top: 2px">Total do Pedido:</h6>
+            <h5 class="mx-2">
+              <money
+                class="form-label"
+                id="totalPedido"
+                v-model="totalPedido"
+                v-bind="maskMoney"
+                style="color: #fd9485; border: 0; background: border-box; font-weight: 500"
+                disabled
+              />
+            </h5>
+          </div>
+          <div>
+            <button class="btn botao-confirmar" @click="realizaVenda" type="submit">
+              <img src="../../assets/icons/SaleIcon.svg" alt="" width="15" height="15" />
+              &nbsp;&nbsp;Realizar Venda
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
   <FooterComponent />

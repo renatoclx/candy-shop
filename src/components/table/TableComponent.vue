@@ -3,6 +3,7 @@ const props = defineProps({
   fields: Array,
   data: Array,
   columnNames: Array,
+  isVenda: Boolean
 })
 
 const emit = defineEmits(['delete', 'update']);
@@ -33,11 +34,11 @@ const updateItem = (id) => {
         </td>
         <td style="width: 250px">
 
-          <button class="btn botao-alterar mx-2">
+          <button class="btn botao-alterar mx-2" v-if="!isVenda" >
             <img src="../../assets/icons/PenIcon.svg" alt="" width="15" height="15" @click="updateItem(item.id)" />
           </button>
           <button class="btn botao-limpar">
-            <img src="../../assets/icons/RemoveIcon.svg" alt="" width="15" height="15" @click="deleteItem(item.id)"/>
+            <img src="../../assets/icons/RemoveIcon.svg" alt="" width="15" height="15" @click="deleteItem(isVenda ? item.vendaId : item.id)"/>
           </button>
         </td>
       </tr>

@@ -57,7 +57,6 @@ const handleUpdateCliente = async (id) => {
   try {
     let response = await api.get(`/cliente/${id}`);
     let cliente = response.data
-    console.log(cliente);
     editCliente(
       id,
       cliente.nome,
@@ -100,6 +99,7 @@ const listaClientes = async () => {
 }
 
 const handleDeleteCliente = (id) => {
+  console.log(id)
   Swal.fire({
         title: "Deseja excluir o Cliente?",
         icon: "warning",
