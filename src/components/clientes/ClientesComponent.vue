@@ -157,7 +157,7 @@ const handleDeleteCliente = (id) => {
           :fields="fields" 
           :data="data" 
           :column-names="columnNames"
-          :show-delete-button="true"
+          :show-delete-button="false"
           @delete="handleDeleteCliente"
           @update="handleUpdateCliente"></TableComponent>
       </div>

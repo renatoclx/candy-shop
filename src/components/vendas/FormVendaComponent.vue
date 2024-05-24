@@ -64,6 +64,7 @@ try {
     let produto = {};
     produto.id = produtos[i].id;
     produto.nome = produtos[i].nome;
+    produto.venda = produtos[i].precoVenda
 
     produtoTabela.value.data.push(produto);
   }
@@ -87,10 +88,12 @@ const selecionaCliente = (id) => {
 const selecionaProduto = (id) => {
   let codigo = produtoTabela.value.data[id].id;
   let nome = produtoTabela.value.data[id].nome;
+  let venda = produtoTabela.value.data[id].venda;
 
   closeableModal.value = false;
   codProduto.value = codigo;
   produto.value = nome;
+  precoUnitario.value = venda;
 
 }
 const closeableModal = ref(false);

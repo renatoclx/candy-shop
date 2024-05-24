@@ -122,9 +122,16 @@ const buscaCep = async () => {
 
 const submitForm = () => {
   submitted.value = true
+  if (nome.value === "" || cep.value === "" || cidade.value === "" || estado.value === "" || documento.value === "" || bairro.value === "" || logradouro.value === "" || numero.value === "") {
+    return false
+  }
+  return true
 }
 
 const salvarCliente = async () => {
+  if(!submitted.value) {
+    return;
+  }
   try {
     if(isEditMode.value) {
       let response = await api.put(`/cliente/${route.params.id}`, {
@@ -198,7 +205,11 @@ const salvarCliente = async () => {
               id="nomeRazao"
               v-model="nome"
               style="height: 2.5rem; width: 52.4rem"
+              :class="{ 'is-invalid': nome === '' && submitted }"
             />
+            <div v-if="submitted && nome === ''" class="invalid-feedback">
+              Digite o nome do Cliente.
+            </div>
           </div>
         </div>
         <div style="display: flex; flex-direction: row; justify-content: space-between">
@@ -214,7 +225,11 @@ const salvarCliente = async () => {
                   style="height: 2.5rem; width: 10rem"
                   v-mask="'#####-###'"
                   @blur="buscaCep"
+                  :class="{ 'is-invalid': cep === '' && submitted }"
                 />
+                <div v-if="submitted && cep === ''" class="invalid-feedback">
+                   Digite o CEP do Cliente.
+                </div>
               </div>
               <div>
                 <label for="cidade" class="form-label mb-0">Cidade:</label>
@@ -224,7 +239,11 @@ const salvarCliente = async () => {
                   id="cidade"
                   v-model="cidade"
                   style="height: 2.5rem; width: 13rem"
+                  :class="{ 'is-invalid': cidade === '' && submitted }"
                 />
+                <div v-if="submitted && cidade === ''" class="invalid-feedback">
+                   Digite o cidade do Cliente.
+                </div>
               </div>
               <div>
                 <label for="estado" class="form-label mb-0">UF:</label>
@@ -234,7 +253,11 @@ const salvarCliente = async () => {
                   id="estado"
                   v-model="estado"
                   style="height: 2.5rem; width: 3rem"
+                  :class="{ 'is-invalid': estado === '' && submitted }"
                 />
+                <div v-if="submitted && estado === ''" class="invalid-feedback">
+                  Digite o estado do Cliente.
+                </div>
               </div>
             </div>
             <div class="bloco">
@@ -256,7 +279,11 @@ const salvarCliente = async () => {
                   id="bairro"
                   v-model="bairro"
                   style="height: 2.5rem; width: 18rem"
+                  :class="{ 'is-invalid': bairro === '' && submitted }"
                 />
+                <div v-if="submitted && bairro === ''" class="invalid-feedback">
+                  Digite o bairro do Cliente.
+                </div>
               </div>
             </div>
           </div>
@@ -271,7 +298,11 @@ const salvarCliente = async () => {
                   v-model="documento"
                   style="height: 2.5rem; width: 20rem"
                   v-mask="['###.###.###-##', '##.###.###/####-##']"
+                  :class="{ 'is-invalid': documento === '' && submitted }"
                 />
+                <div v-if="submitted && bairro === ''" class="invalid-feedback">
+                  Insira um documento válido do Cliente.
+                </div>
               </div>
               <div>
                 <label for="inscricaoEstadual" class="form-label mb-0">Inscrição Estadual:</label>
@@ -281,7 +312,11 @@ const salvarCliente = async () => {
                   v-model="inscEst"
                   id="inscricaoEstadual"
                   style="height: 2.5rem; width: 20rem"
+                  :class="{ 'is-invalid': inscEst === '' && submitted }"
                 />
+                <div v-if="submitted && bairro === ''" class="invalid-feedback">
+                  Insira um Inscrição Estadual do Cliente.
+                </div>
               </div>
             </div>
             <div class="bloco">
@@ -293,7 +328,11 @@ const salvarCliente = async () => {
                   v-model="logradouro"
                   id="logradouro"
                   style="height: 2.5rem; width: 35rem"
+                  :class="{ 'is-invalid': logradouro === '' && submitted }"
                 />
+                <div v-if="submitted && bairro === ''" class="invalid-feedback">
+                  Insira o logradouro do Cliente.
+                </div>
               </div>
               <div>
                 <label for="numero" class="form-label mb-0">Número:</label>
@@ -303,15 +342,19 @@ const salvarCliente = async () => {
                   id="numero"
                   v-model="numero"
                   style="height: 2.5rem; width: 5rem"
+                  :class="{ 'is-invalid': numero === '' && submitted }"
                 />
               </div>
+              <div v-if="submitted && numero === ''" class="invalid-feedback">
+                  Insira o número de endereço do Cliente.
+                </div>
             </div>
             <div class="bloco" style="display: flex; justify-content: end; margin-top: 2rem">
               <router-link to="/clientes">
                 <button class="btn botao-limpar btn-lg">Voltar</button>
               </router-link>
               <button class="btn botao-pesquisar mx-3 btn-lg" @click="limparCampos">Limpar</button>
-              <button class="btn botao-confirmar btn-lg" @click="salvarCliente" type="submit">Inserir</button>
+              <button class="btn botao-confirmar btn-lg" @click="salvarCliente">Inserir</button>
             </div>
           </div>
         </div>

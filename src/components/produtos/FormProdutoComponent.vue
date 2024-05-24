@@ -59,9 +59,18 @@ const limparCampos = () => {
 
 const submitForm = () => {
   submitted.value = true
+
+  if (nomeProduto.value === '' || precoCusto.value === '' || precoVenda.value === '') {
+    return false
+  }
+
+  return true;
 }
 
 const salvarProduto = async () => {
+  if(!submitted.value) {
+    return;
+  }
   try {
     if(isEditMode.value) {
 
@@ -159,7 +168,7 @@ const salvarProduto = async () => {
         </router-link>
         
         <button class="btn botao-pesquisar mx-3 btn-lg" @click="limparCampos">Limpar</button>
-        <button class="btn botao-confirmar btn-lg" @click="salvarProduto" type="submit">Inserir</button>
+        <button class="btn botao-confirmar btn-lg" @click="salvarProduto">Inserir</button>
       </div>
     </form>
     </div>

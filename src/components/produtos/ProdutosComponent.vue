@@ -129,7 +129,7 @@ const  listaProdutos = async () => {
           :fields="fields" 
           :data="data" 
           :column-names="columnNames"
-          :show-delete-button="true"
+          :show-delete-button="false"
           @delete="handleDeleteProduto" 
           @update="handleUpdateProduto"
         > </TableComponent>

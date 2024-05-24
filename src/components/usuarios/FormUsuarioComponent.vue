@@ -32,6 +32,13 @@ const usuario = ref({
 
 const submitForm = () => {
   submitted.value = true
+  if (nomeUsuario.value === '' || loginUsuario.value === '' || senhaUsuario.value === '' || confirmSenha.value === '') {
+    return false
+  }
+  if (!validaSenha()) {
+    return false
+  }
+  return true
 }
 
 const validaSenha = () => {
@@ -65,6 +72,9 @@ const limparCampos = () => {
 }
 
 const salvarUsuario = async () => {
+  if(!submitted.value) {
+    return;
+  }
   try {
     if(isEditMode.value) {
       let response = await api.put(`/usuario/${route.params.id}`, {
@@ -83,6 +93,7 @@ const salvarUsuario = async () => {
 
       limparCampos();
     } else {
+      console.log(submitted.value)
       let response = await  api.post(`/usuario`, {
         nome: nomeUsuario.value,
         login: loginUsuario.value,
@@ -128,6 +139,7 @@ const salvarUsuario = async () => {
               v-model="nomeUsuario"
               style="height: 2.5rem; width: 30rem"
               :class="{ 'is-invalid': nomeUsuario === '' && submitted }"
+              @blur="submitForm"
             />
             <div v-if="submitted && nomeUsuario === ''" class="invalid-feedback">
               Digite o nome do usuário.
@@ -144,6 +156,7 @@ const salvarUsuario = async () => {
               v-model="loginUsuario"
               style="height: 2.5rem; width: 30rem"
               :class="{ 'is-invalid': loginUsuario === '' && submitted }"
+              @blur="submitForm"
             />
             <div v-if="submitted && loginUsuario === ''" class="invalid-feedback">
               Digite um login para o usuário.
@@ -159,7 +172,12 @@ const salvarUsuario = async () => {
               v-model="senhaUsuario"
               id="senhaUsuario"
               style="height: 2.5rem; width: 30rem"
+              :class="{ 'is-invalid': senhaUsuario === '' && submitted }"
+              @blur="submitForm"
             />
+          </div>
+          <div v-if="submitted && senhaUsuario === ''" class="invalid-feedback">
+            Digite um login para o usuário.
           </div>
         </div>
         <div class="bloco-form" style="justify-content: center">
@@ -181,7 +199,7 @@ const salvarUsuario = async () => {
         </router-link>
           
           <button class="btn botao-pesquisar mx-3 btn-lg">Limpar</button>
-          <button class="btn botao-confirmar btn-lg" @click="salvarUsuario" type="submit">Inserir</button>
+          <button class="btn botao-confirmar btn-lg" @click="salvarUsuario">Inserir</button>
         </div>
       </form>
     </div>
