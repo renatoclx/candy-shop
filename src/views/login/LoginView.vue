@@ -3,6 +3,7 @@
 
   import { ref } from 'vue'
   import { useRouter } from 'vue-router';
+import api from '@/config/axios';
 
   const router = useRouter();
 
@@ -10,20 +11,30 @@
   const senha = ref("");
   const submitted = ref(false)
 
-  const submitForm = () => {
+  const submitForm = async () => {
     submitted.value = true
+    
+    const response = await api.get('/login', {
+      params: {
+        login: usuario.value,
+        senha: senha.value 
+      }
+    });
 
-    if(usuario.value === "administrador" && senha.value === "@Admin2020") {
-      localStorage.setItem('token', senha.value);
-      router.push("/");
-    } else {
-      toast('Verifique suas credenciais.', {
-        type: 'error',
-        dangerouslyHTMLString: true
+    if(response.data === "autenticado") {
+      localStorage.setItem("token", "token-teste");
+      router.push({name: 'Home'});
+      toast('Seja Bem vindo!', {
+        type: 'success',
+        dangerouslyHTMLString: false
       })
-
-      limparCampos();
+    } else {
+      toast('Falha na Autenticação', {
+        type: 'warning',
+        dangerouslyHTMLString: false
+      })
     }
+
   }
 
   const limparCampos = () => {
@@ -77,7 +88,7 @@
           </div>
           <div class="botoes">
             <button class="mx-2 btn btn-lg botao-principal" @click="submitForm">Acessar</button>
-            <button class="mx-2 btn btn-lg botao-limpar">Limpar</button>
+            <button class="mx-2 btn btn-lg botao-limpar" @click="limparCampos">Limpar</button>
           </div>
       </form>
       </div>

@@ -7,7 +7,7 @@ import { toast } from 'vue3-toastify';
 const router = useRouter();
 
 const logout = () => {
-    localStorage.setItem('token', null);
+  localStorage.removeItem('token');
     toast('Volte em breve!', {
         type: 'success',
         dangerouslyHTMLString: false

@@ -87,7 +87,8 @@ const salvarUsuario = async () => {
         nome: nomeUsuario.value,
         login: loginUsuario.value,
         senha: senhaUsuario.value,
-        ativo: 1
+        ativo: 1,
+        admin: 0
       });
 
       let inserido = response.data;
@@ -103,7 +104,11 @@ const salvarUsuario = async () => {
 
     router.push("/usuarios");
   } catch(e) {
-    console.error(e)
+    Swal.fire({
+        title: "Login já cadastrado!",
+        icon: "danger"
+      });
+    loginUsuario.value = "";
   }
 }
 

@@ -2,8 +2,6 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 import './assets/main.css'
 import 'vue3-toastify/dist/index.css'
-import api from '@/config/axios';
-
 
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -48,5 +46,5 @@ app.use(router)
 app.use(Vue3Toastify)
 app.use(VueTheMask)
 
-app.config.globalProperties.$axios = api;
+//app.config.globalProperties.axios = api;
 app.mount('#app')

@@ -21,13 +21,13 @@ const router = createRouter({
       path: '/clientes',
       name: 'Clientes',
       component: () => import('../components/clientes/ClientesComponent.vue'),
-      meta: { layout: 'list-client' }
+      meta: { layout: 'list-client', requiresAuth: true }
     },
     {
       path: '/clientes/novo',
       name: 'NovoCliente',
       component: () => import('../components/clientes/FormClientComponent.vue'),
-      meta: { layout: 'form-client-component' }
+      meta: { layout: 'form-client-component', requiresAuth: true }
     },
     {
       path: '/clientes/:id',
@@ -46,19 +46,19 @@ const router = createRouter({
         cidade: route.query.cidade, 
         estado: route.query.estado
       }),
-      meta: { layout: 'form-client-component' }
+      meta: { layout: 'form-client-component', requiresAuth: true  }
     },
     {
       path: '/usuarios',
       name: 'Usuários',
       component: () => import('../components/usuarios/UsuariosComponent.vue'),
-      meta: { layout: 'list-user' }
+      meta: { layout: 'list-user', requiresAuth: true  }
     },
     {
       path: '/usuarios/novo',
       name: 'NovoUsuario',
       component: () => import('../components/usuarios/FormUsuarioComponent.vue'),
-      meta: { layout: 'form-user-component' }
+      meta: { layout: 'form-user-component', requiresAuth: true  }
     },
     {
       path: '/usuarios/:id',
@@ -70,19 +70,19 @@ const router = createRouter({
         login: route.query.login,
         senha: route.query.senha
       }),
-      meta: { layout: 'form-user-component' }
+      meta: { layout: 'form-user-component', requiresAuth: true  }
     },
     {
       path: '/produtos',
       name: 'Produtos',
       component: () => import('../components/produtos/ProdutosComponent.vue'),
-      meta: { layout: 'list-product' }
+      meta: { layout: 'list-product', requiresAuth: true  }
     },
     {
       path: '/produtos/novo',
       name: 'NovoProduto',
       component: () => import('../components/produtos/FormProdutoComponent.vue'),
-      meta: { layout: 'form-product-component' }
+      meta: { layout: 'form-product-component', requiresAuth: true  }
     },
     {
       path: '/produtos/:id',
@@ -94,29 +94,33 @@ const router = createRouter({
         precoCusto: route.query.custo,
         precoVenda: route.query.venda
       }),
-      meta: { layout: 'form-product-component' }
+      meta: { layout: 'form-product-component', requiresAuth: true  }
     },
     {
       path: '/vendas',
       name: 'Vendas',
       component: () => import('../components/vendas/VendasComponent.vue'),
-      meta: { layout: 'list-sales' }
+      meta: { layout: 'list-sales', requiresAuth: true  }
     },
     {
       path: '/vendas/novo',
       name: 'NovaVenda',
       component: () => import('../components/vendas/FormVendaComponent.vue'),
-      meta: { layout: 'form-venda-component' }
+      meta: { layout: 'form-venda-component', requiresAuth: true  }
     }
   ]
 })
 
 router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem('token');
-  if (to.matched.some(record => record.meta.requiresAuth) && !token) {
-    next('/login');
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+      const token = localStorage.getItem('token');
+      if (token === null) {
+          next({ name: 'Login' });
+      } else {
+          next();
+      }
   } else {
-    next();
+      next();
   }
 });
 
