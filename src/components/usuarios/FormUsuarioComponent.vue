@@ -108,7 +108,6 @@ const salvarUsuario = async () => {
         title: "Login já cadastrado!",
         icon: "danger"
       });
-    loginUsuario.value = "";
   }
 }
 

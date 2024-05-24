@@ -2,16 +2,16 @@
 import { RouterLink } from 'vue-router'
 import { useRouter } from 'vue-router';
 
-import { toast } from 'vue3-toastify';
+import Swal from 'sweetalert2'
 
 const router = useRouter();
 
 const logout = () => {
   localStorage.removeItem('token');
-    toast('Volte em breve!', {
-        type: 'success',
-        dangerouslyHTMLString: false
-      })
+  Swal.fire({
+        title: "Volte em breve!",
+        icon: "success"
+      });
     
     router.push("/login");
   }

@@ -1,9 +1,10 @@
 <script setup>
   import { toast } from 'vue3-toastify';
+  import Swal from 'sweetalert2'
 
   import { ref } from 'vue'
   import { useRouter } from 'vue-router';
-import api from '@/config/axios';
+  import api from '@/config/axios';
 
   const router = useRouter();
 
@@ -20,15 +21,22 @@ import api from '@/config/axios';
         senha: senha.value 
       }
     });
-
+    
     if(response.data === "autenticado") {
-      localStorage.setItem("token", "token-teste");
+      localStorage.setItem("token", "token-normal");
       router.push({name: 'Home'});
-      toast('Seja Bem vindo!', {
-        type: 'success',
-        dangerouslyHTMLString: false
-      })
-    } else {
+      Swal.fire({
+        title: "Seja Bem-Vindo!!",
+        icon: "success"
+      });
+    } else if(response.data === "admin") {
+      localStorage.setItem("token", "token-admin");
+      router.push({name: 'Home'});
+      Swal.fire({
+        title: "Seja Bem-Vindo!!",
+        icon: "success"
+      });
+    }  else {
       toast('Falha na Autenticação', {
         type: 'warning',
         dangerouslyHTMLString: false

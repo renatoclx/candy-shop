@@ -3,10 +3,12 @@ const props = defineProps({
   fields: Array,
   data: Array,
   columnNames: Array,
-  isVenda: Boolean
+  isVenda: Boolean,
+  showDeleteButton: Boolean
 })
 
 const emit = defineEmits(['delete', 'update']);
+const token = localStorage.getItem('token');
 
 const deleteItem = (id) => {
   emit("delete", id)
@@ -34,10 +36,10 @@ const updateItem = (id) => {
         </td>
         <td style="width: 250px">
 
-          <button class="btn botao-alterar mx-2" v-if="!isVenda" >
+          <button class="btn botao-alterar mx-2" v-if="!isVenda">
             <img src="../../assets/icons/PenIcon.svg" alt="" width="15" height="15" @click="updateItem(item.id)" />
           </button>
-          <button class="btn botao-limpar">
+          <button class="btn botao-limpar" v-if="showDeleteButton || token === 'token-admin'">
             <img src="../../assets/icons/RemoveIcon.svg" alt="" width="15" height="15" @click="deleteItem(isVenda ? item.vendaId : item.id)"/>
           </button>
         </td>

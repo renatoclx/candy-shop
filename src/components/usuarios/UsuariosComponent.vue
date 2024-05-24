@@ -14,11 +14,15 @@ const router = useRouter();
 const fields = ['id', 'nome', 'login']
 const columnNames = ['ID', 'Nome', 'Login']
 const titleField = ref('Usuários')
+const isAdmin = ref(false);
 
 const data = ref([]);
 
 onMounted(() => {
   listaUsuarios();
+  if(localStorage.getItem("token") === "token-admin") {
+    isAdmin.value = true;
+  }
 })
 
 const editUsuario = (id, nome, login, senha) => {
@@ -61,6 +65,7 @@ const  listaUsuarios = async () => {
       usuario.id = usuarios[i].id;
       usuario.nome = usuarios[i].nome;
       usuario.login = usuarios[i].login;
+      usuario.admin = usuarios[i].admin;
      
       data.value.push(usuario);
     }
@@ -126,6 +131,7 @@ const handleDeleteUsuario = (id) => {
           :fields="fields" 
           :data="data" 
           :column-names="columnNames"
+          :show-delete-button="false"
           @delete="handleDeleteUsuario" 
           @update="handleUpdateUsuario"
           ></TableComponent>
